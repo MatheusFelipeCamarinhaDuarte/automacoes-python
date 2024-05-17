@@ -1,0 +1,6 @@
+Fazer o automático ser enviado por meio de um csv que o próprio python cria.
+
+Fazer com que as rotas sejam mais dinâmicas (não sei como).
+
+Fazer um site depois
+
