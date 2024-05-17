@@ -1,6 +1,6 @@
 import psycopg2
-
 import pandas as pd
+import os
 
 # Conexão com o primeiro banco de dados
 conn1 = psycopg2.connect(
