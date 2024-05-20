@@ -2,23 +2,9 @@ import tkinter as tk
 from app.root import NovaTela
 from app.assets.alertas import alerta_invalido
 from app.telas.inserir_dados import tela_de_insercao
-from app.assets.botoes_universais import voltar_uma_tela
+from app.assets.botoes_universais import voltar_uma_tela, mostrar_selecionado
 from app.assets.verificacoes import verifica_nulos
 
-def mostrar_selecao(opcao,var_opcao,sistema):
-    selected_option = var_opcao.get()
-    if selected_option == 1:
-        opcao.config(text=sistema)
-    elif selected_option == 2:
-        opcao.config(text=sistema)
-    elif selected_option == 3:
-        opcao.config(text=sistema)
-    elif selected_option == 4:
-        opcao.config(text=sistema)
-    elif selected_option == 5:
-        opcao.config(text=sistema)
-    else:
-        opcao.config(text="Nenhuma opção selecionada")
 
 def escolha_sistema(janela,migracao):
     # Oculta a primeira janela
@@ -48,13 +34,13 @@ def escolha_sistema(janela,migracao):
     label_titulo = tk.Label(frame1, text="Escolha o sistema de origem:")
     label_titulo.pack(anchor=tk.W)
     var_opcao1 = tk.IntVar()
-    msys = tk.Radiobutton(frame1, text="EMsys", variable=var_opcao1, value=1, command=lambda: mostrar_selecao(opcao,var_opcao1,'EMsys'))
+    msys = tk.Radiobutton(frame1, text="EMsys", variable=var_opcao1, value=1, command=lambda: mostrar_selecionado(opcao,var_opcao1,'EMsys'))
     msys.pack(anchor=tk.W)
-    posto_facil = tk.Radiobutton(frame1, text="Posto Fácil", variable=var_opcao1, value=2, command=lambda: mostrar_selecao(opcao,var_opcao1,"Posto Fácil"))
+    posto_facil = tk.Radiobutton(frame1, text="Posto Fácil", variable=var_opcao1, value=2, command=lambda: mostrar_selecionado(opcao,var_opcao1,"Posto Fácil"))
     posto_facil.pack(anchor=tk.W)
-    seller = tk.Radiobutton(frame1, text="Seller", variable=var_opcao1, value=3, command=lambda: mostrar_selecao(opcao,var_opcao1,"Seller"))
+    seller = tk.Radiobutton(frame1, text="Seller", variable=var_opcao1, value=3, command=lambda: mostrar_selecionado(opcao,var_opcao1,"Seller"))
     seller.pack(anchor=tk.W)
-    outros = tk.Radiobutton(frame1, text="Outros", variable=var_opcao1, value=4, command=lambda: mostrar_selecao(opcao,var_opcao1, "Outros"))
+    outros = tk.Radiobutton(frame1, text="Outros", variable=var_opcao1, value=4, command=lambda: mostrar_selecionado(opcao,var_opcao1, "Outros"))
     outros.pack(anchor=tk.W)
     opcao = tk.Label(frame1, text='Nenhuma opção selecionada')
     opcao.pack(anchor=tk.W)
@@ -65,7 +51,7 @@ def escolha_sistema(janela,migracao):
     label_titulo = tk.Label(frame2, text="Escolha o sistema de destino:")
     label_titulo.pack(anchor=tk.W)
     var_opcao2 = tk.IntVar()
-    seller = tk.Radiobutton(frame2, text="AutoSystem", variable=var_opcao2, value=5, command=lambda: mostrar_selecao(opcao2,var_opcao2, "AutoSystem"))
+    seller = tk.Radiobutton(frame2, text="AutoSystem", variable=var_opcao2, value=5, command=lambda: mostrar_selecionado(opcao2,var_opcao2, "AutoSystem"))
     seller.pack(anchor=tk.W)
     opcao2 = tk.Label(frame2, text="Nenhuma opção selecionada")
     opcao2.pack(anchor=tk.W)
