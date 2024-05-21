@@ -9,18 +9,17 @@ def nova_tela_atual(tela_anterior,largura:int,altura:int, titulo:str):
     # Ocultação da janela anterior
     tela_anterior.withdraw()
     
+    # Dimensões da tela com as informações passadas e sendo direcionadas para o meio da tela
+    xa = (tela_anterior.winfo_screenwidth() // 2) - (largura // 2)
+    ya = (tela_anterior.winfo_screenheight() // 2) - (altura // 2)
     # Cria a janela nova com o título passado
-    tela_atual = NovaTela()
+    tela_atual = NovaTela(tela_anterior, width=largura, height=altura)
     tela_atual.title(titulo)
     
-    # Dimensões da tela com as informações passadas e sendo direcionadas para o meio da tela
-    x = (tela_atual.winfo_screenwidth() // 2) - (largura // 2)
-    y = (tela_atual.winfo_screenheight() // 2) - (altura // 2)
-    tela_atual.geometry(f"{largura}x{altura}+{x}+{y}")
+    tela_atual.geometry(f"{largura}x{altura}+{xa}+{ya}")
 
     # Retorna a janela atual
     return tela_atual
-import tkinter as tk
 
 
 def rodape_da_tela(frame_inferior,janela_principal,tela_anterior,tela_atual):
