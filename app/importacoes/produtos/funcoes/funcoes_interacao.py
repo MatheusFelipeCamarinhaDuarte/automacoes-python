@@ -1,6 +1,6 @@
 import pandas as pd
 import os
-from funcoes.funcoes_banco import iniciar_banco
+from app.assets.conexao_banco import iniciar_banco
 from funcoes.funcoes_separador import *
 
 def escolha_importacao_dados():
@@ -12,7 +12,7 @@ def escolha_importacao_dados():
     menu = 2
     match menu:
         case 1:
-            conexao2, cursor2 = iniciar_banco(intencao="extrair")
+            conexao2, cursor2 = iniciar_banco("postgres","postgres","flora_loja")
             tabela = 'AQUI deve ter uma matriz equivalente a tabela abaixo'
             print("A ser implementado ainda")
             return

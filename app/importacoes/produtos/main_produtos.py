@@ -1,4 +1,5 @@
-from funcoes.funcoes_banco import iniciar_banco, cadastrar_no_banco,finalizar_banco
+from app.assets.conexao_banco import iniciar_banco,finalizar_banco
+from funcoes.funcoes_banco import cadastrar_no_banco
 from funcoes.funcoes_interacao import escolha_importacao_dados, escolha_demilitador
 from funcoes.funcoes_pegar_grupo import pegar_grupos
 

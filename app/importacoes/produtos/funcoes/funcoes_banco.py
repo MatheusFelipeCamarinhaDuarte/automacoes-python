@@ -1,22 +1,7 @@
-import psycopg2
 from funcoes.funcoes_limpar_dados import limpar_nome
 
 #Inicia o banco de dados
-def iniciar_banco(intencao):
-        while True:
-            banco = input(f"Digite o nome do banco que deseja {intencao} os dados: ")
-            try:
-                conn1 = psycopg2.connect(
-                    host="localhost",
-                    user="postgres",
-                    password="postgres",
-                    database=banco
-                )
-                cur1 = conn1.cursor()
-                break
-            except:
-                 print("A conexão com o banco de dados falhou, confira e digite novamente")
-        return conn1, cur1
+
 
 # Cadastra os produtos:
 def cadastrar_no_banco(cursor,tabela,listagem,lista_keys_grupo,lista_grupos):
@@ -57,9 +42,5 @@ def cadastrar_no_banco(cursor,tabela,listagem,lista_keys_grupo,lista_grupos):
             for item in lista_erros:
                 print(f'Linha: {item[0]}\nNome: {item[1]} - Codigo de barras: {item[2]} - preço: {item[3]}')
         else:
-             print("Todos os produtos foram adicionados com sucesso!!")
+            print("Todos os produtos foram adicionados com sucesso!!")
 # Finaliza o banco com commit
-def finalizar_banco(conexao, cursor):
-    conexao.commit()
-    cursor.close()
-    conexao.close()
