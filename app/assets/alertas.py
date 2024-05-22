@@ -1,7 +1,7 @@
 import tkinter as tk
 from app.root import caminho_icone
 def alerta_invalido(mensagem):
-    tela_alerta = tk.Toplevel()
+    tela_alerta = tk.Tk()
     tela_alerta.title("ALERTA!")
     icone = caminho_icone()
     tela_alerta.iconbitmap(icone)
@@ -15,3 +15,4 @@ def alerta_invalido(mensagem):
     label_titulo.pack(anchor=tk.CENTER, expand=True, fill=tk.BOTH)
     botao_ok = tk.Button(tela_alerta,text="OK", command=lambda: [tela_alerta.destroy()], width=14)
     botao_ok.pack(anchor=tk.CENTER, pady=10)
+    tela_alerta.mainloop()

@@ -28,8 +28,9 @@ def tela_inicial():
 if __name__ == "__main__":
     
     conectado = conexao()
-    if conectado:
-        app = tela_inicial()
-        app.mainloop()
-    else:
-        alerta_invalido("Você não tem um certificado válido")
+    if conectado == True or conectado == False:
+        if conectado:
+            app = tela_inicial()
+            app.mainloop()
+        else:
+            alerta_invalido("Você não tem um certificado válido")
