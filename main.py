@@ -19,8 +19,7 @@ def tela_inicial():
     
     apresentacao = tk.Label(janela_principal, text="Projeto de importação de dados para dentro do banco")
     apresentacao.pack(anchor=tk.CENTER, expand=True)
-    conectado = conexao()
-    button = tk.Button(janela_principal, text="INICIAR", width=10,height=1, command=lambda: escolha_tipo(janela_principal) if conectado else alerta_invalido("Você não tem um certificado válido"))
+    button = tk.Button(janela_principal, text="INICIAR", width=10,height=1, command=lambda: escolha_tipo(janela_principal))
     button.pack(anchor=tk.CENTER, expand=True)
     
     # Retornando a primeira tela criada
@@ -28,7 +27,9 @@ def tela_inicial():
 
 if __name__ == "__main__":
     
-    # Criando uma instância da aplicação
-    app = tela_inicial()
-    # Permanecendo ela em loop
-    app.mainloop()
+    conectado = conexao()
+    if conectado:
+        app = tela_inicial()
+        app.mainloop()
+    else:
+        alerta_invalido("Você não tem um certificado válido")

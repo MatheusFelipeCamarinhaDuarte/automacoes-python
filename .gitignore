@@ -18,6 +18,5 @@ build/main/localpycs/struct.pyc
 dist/main.exe
 como-startar.txt
 build/main/EXE-00.toc
-app/chave/chave.py
-app/chave/matheus-solutions-firebase-adminsdk-1wjyx-583b5a3a87.json
 app/chave/conexao_firebase.py
+app/chave/cred/matheus-solutions-firebase-adminsdk-1wjyx-583b5a3a87.json
