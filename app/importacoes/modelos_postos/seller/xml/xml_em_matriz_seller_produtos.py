@@ -5,9 +5,11 @@ def xml_to_matriz_produto():
 # Obtenha o caminho do diretório do script
     script_dir = os.path.dirname(os.path.abspath(__file__))
 
+    # Aqui preciso passar o arquivo recebido por XML
+    xml_file = None 
+    
     # Caminho completo para o arquivo XML
     xml_file = os.path.join(script_dir, 'produtos', 'csv', 'arquivo.xml')
-
     # Parse o XML
     tree = ET.parse(xml_file)
     root = tree.getroot()
@@ -31,3 +33,7 @@ def xml_to_matriz_produto():
     # Imprime a matriz
     # for linha in matriz:
     #     print(','.join(linha))
+
+    # Retorna a matriz
+    return matriz
+
