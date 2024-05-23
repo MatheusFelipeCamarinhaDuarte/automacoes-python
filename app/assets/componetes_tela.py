@@ -24,24 +24,29 @@ def nova_tela_atual(tela_anterior,largura:int,altura:int, titulo:str):
 
 def rodape_da_tela(frame_inferior,janela_principal,tela_anterior,tela_atual):
     frame_rodape = tk.Frame(frame_inferior)
-    frame_rodape.pack( expand=True, fill=tk.BOTH)
+    frame_rodape.pack(anchor=tk.S,expand=True, fill=tk.X)
     botao_voltar(frame_rodape,tela_anterior,tela_atual)
     botao_sair(frame_rodape,janela_principal)
     return frame_rodape
 
 
 
-def radio_botoes(lista_radio:list, frame_pertencente):
+def radio_botoes(lista_radio:list, frame_pertencente,orientacao=tk.W,lista:bool=False):
     # Definição da variável que indica o radio_button
     var_opcao = tk.StringVar(value='Nenhuma opção selecionada')
+    frame_dos_radio_buttons = tk.Frame(frame_pertencente)
+    lado = tk.TOP
+    if lista:
+        lado = tk.RIGHT
+    frame_dos_radio_buttons.pack()
 
     # Criação de radio_button versionada de acordo com a lista passada
     for texto in lista_radio:
-        radio_button = tk.Radiobutton(frame_pertencente, text=texto, variable=var_opcao, value=texto, command=lambda: opcao.config(text=var_opcao.get()))
-        radio_button.pack(anchor=tk.W)
+        radio_button = tk.Radiobutton(frame_dos_radio_buttons, text=texto, variable=var_opcao, value=texto, command=lambda: opcao.config(text=var_opcao.get()))
+        radio_button.pack(anchor=orientacao,side=lado)
 
     opcao = tk.Label(frame_pertencente, text=var_opcao.get())
-    opcao.pack(anchor=tk.W)
+    opcao.pack(anchor=orientacao)
     
     # Retorna a variável que mantém o valor selecionado
     return var_opcao

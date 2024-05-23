@@ -2,7 +2,7 @@ import tkinter as tk
 from app.assets.componetes_tela import nova_tela_atual, radio_botoes, rodape_da_tela
 from app.assets.alertas import alerta_invalido
 from app.assets.verificacoes import verifica_outros
-from app.telas.inserir_dados import tela_de_insercao
+from app.telas.escolha_tabela import tela_de_insercao
 
 
 def tela_de_escolha_sistema(janela_principal,tela_anterior,migracao:str):

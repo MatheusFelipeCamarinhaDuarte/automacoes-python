@@ -2,7 +2,6 @@ import os
 import tkinter as tk
 def caminho_icone():
     diretorio_atual = os.path.dirname(os.path.abspath(__file__))
-    print(diretorio_atual)
     # Define o caminho para o arquivo de ícone
     caminho_icone = os.path.join(diretorio_atual, "icons", "ms3.ico")
     return caminho_icone

@@ -19,7 +19,7 @@ def botao_sair(ultimo_frame,janela_principal,padix=10,padiy=10):
     sair = tk.Button(ultimo_frame, text="Sair", command=lambda: janela_principal.quit())
     sair.pack(side=tk.RIGHT, pady=padiy, padx=padix)
     return sair
-    
+
 #Teste unitário para a verificação dos componentes
 if __name__ == "__main__":
     # Exemplo de uso

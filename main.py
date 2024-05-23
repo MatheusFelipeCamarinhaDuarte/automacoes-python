@@ -3,6 +3,7 @@ from app.telas.escolha_tipo import escolha_tipo
 from app.root import caminho_icone
 from app.chave.conexao_firebase import conexao
 from app.assets.alertas import alerta_invalido
+from tkinter import messagebox
 
 
 
@@ -13,7 +14,7 @@ def tela_inicial():
     icone = caminho_icone()
     janela_principal.iconbitmap(icone)
     janela_principal.resizable(False, False)
-
+    
     # Dimensões de tela
     janela_principal.geometry(f"{300}x{180}+{(janela_principal.winfo_screenwidth() // 2) - (300 // 2)}+{(janela_principal.winfo_screenheight() // 2) - (180 // 2)}")
     
@@ -27,10 +28,13 @@ def tela_inicial():
 
 if __name__ == "__main__":
     
+    # app = tela_inicial()
+    # app.mainloop()
     conectado = conexao()
     if conectado == True or conectado == False:
         if conectado:
             app = tela_inicial()
             app.mainloop()
         else:
-            alerta_invalido("Você não tem um certificado válido")
+            messagebox.showerror("Erro", "Você não tem um certificado válido")
+            # alerta_invalido("Você não tem um certificado válido")
