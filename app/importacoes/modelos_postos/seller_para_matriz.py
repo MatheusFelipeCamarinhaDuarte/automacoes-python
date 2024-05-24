@@ -1,7 +1,6 @@
 import os
 import xml.etree.ElementTree as ET
 from tkinter import messagebox
-from app.assets.pegar_arquivo_tranferencia import deletar_arquivo_temp
 
 def xml_to_matriz_produto():
 # Obtenha o caminho do diretório do script
@@ -46,5 +45,4 @@ def xml_to_matriz_produto():
         return matriz
     except:
         messagebox.showerror("Erro", f'O XML apontado não é válido! olha a aba "Como retirar relatórios no formato correto" para obter o arquivo certo.')
-        deletar_arquivo_temp()
 xml_to_matriz_produto()

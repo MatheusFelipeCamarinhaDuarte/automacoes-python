@@ -10,6 +10,7 @@ from tkinter import messagebox
 def tela_inicial():
     #Criação da janela principal
     janela_principal = tk.Tk()
+    janela_principal.withdraw()
     janela_principal.title("Matheus Solutions")
     icone = caminho_icone()
     janela_principal.iconbitmap(icone)
@@ -17,6 +18,7 @@ def tela_inicial():
     
     # Dimensões de tela
     janela_principal.geometry(f"{300}x{180}+{(janela_principal.winfo_screenwidth() // 2) - (300 // 2)}+{(janela_principal.winfo_screenheight() // 2) - (180 // 2)}")
+    janela_principal.deiconify()
     
     apresentacao = tk.Label(janela_principal, text="Projeto de importação de dados para dentro do banco")
     apresentacao.pack(anchor=tk.CENTER, expand=True)

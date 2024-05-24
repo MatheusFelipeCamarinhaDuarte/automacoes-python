@@ -10,13 +10,15 @@ def nova_tela_atual(tela_anterior,largura:int,altura:int, titulo:str):
     tela_anterior.withdraw()
     
     # Dimensões da tela com as informações passadas e sendo direcionadas para o meio da tela
-    xa = (tela_anterior.winfo_screenwidth() // 2) - (largura // 2)
-    ya = (tela_anterior.winfo_screenheight() // 2) - (altura // 2)
     # Cria a janela nova com o título passado
     tela_atual = NovaTela(tela_anterior, width=largura, height=altura)
+    # tela_atual.withdraw()
+    # xa = (tela_anterior.winfo_screenwidth() // 2) - (largura // 2)
+    # ya = (tela_anterior.winfo_screenheight() // 2) - (altura // 2)
+    # tela_atual.geometry(f"{largura}x{altura}+{xa}+{ya}")
+    # tela_atual.deiconify()
     tela_atual.title(titulo)
     
-    tela_atual.geometry(f"{largura}x{altura}+{xa}+{ya}")
 
     # Retorna a janela atual
     return tela_atual
@@ -29,6 +31,25 @@ def rodape_da_tela(frame_inferior,janela_principal,tela_anterior,tela_atual):
     botao_sair(frame_rodape,janela_principal)
     return frame_rodape
 
+def input_com_titulo(frame_pertencente, titulo:str, largura:int=20,lista=False,padiy:int = 10,padix:int = 10):
+    # Cria o label com o título passado
+    frame_conjunto = tk.Frame(frame_pertencente)
+    frame_conjunto.pack()
+    direcao = tk.TOP
+    if lista:
+        direcao = tk.LEFT
+    
+    label = tk.Label(frame_conjunto, text=titulo)
+    label.pack(side=direcao, pady=padiy, padx=padix)
+    
+    # Cria o input com a largura passada
+    input = tk.Entry(frame_conjunto, width=largura)
+    input.pack(side=direcao, pady=padiy, padx=padix)
+    
+    # if lista:
+    #     input.config(state=tk.DISABLED)
+    # Retorna o input criado
+    return input
 
 
 def radio_botoes(lista_radio:list, frame_pertencente,orientacao=tk.W,lista:bool=False):

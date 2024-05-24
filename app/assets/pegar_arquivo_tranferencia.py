@@ -3,13 +3,8 @@ from tkinter import filedialog
 from tkinter import messagebox
 import shutil
 import os
-# serve para separar os testes do main principal
-try:
-    from app.assets.verificacoes import verifica_vazios
-except:
-    from verificacoes import verifica_vazios
-
-def selecionar_arquivo(extensao_desejada):
+from app.telas.inserir_dados_no_banco import inserir_no_banco
+def selecionar_arquivo(tela_atual,janela_principal,migracao,sistema_origem,sistema_destino,extensao_desejada):
     # Pede ao usuário o arquivo
     arquivo_selecionado = filedialog.askopenfilename()
     
@@ -33,6 +28,7 @@ def selecionar_arquivo(extensao_desejada):
             # Copio e renomeio o arquivo 
             shutil.copy(arquivo_selecionado, caminho_absoluto)
             shutil.move(antigo_nome,novo_nome)
+            inserir_no_banco(tela_atual,janela_principal,migracao,sistema_origem,sistema_destino,extensao_desejada)
         else:
             # Caso a extensão não seja equivalente ao pedido, ele vai indicar qual a indicada.
             messagebox.showerror("Erro", f"Extensão inválida, o arquivo precisa ser {extensao_desejada}.")

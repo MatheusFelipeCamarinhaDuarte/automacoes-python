@@ -11,5 +11,11 @@ class NovaTela(tk.Toplevel):
         super().__init__(master, **kwargs)
         self.iconbitmap(caminho_icone())
         self.resizable(False, False)
+        self.withdraw()
+        xa = (self.winfo_screenwidth() // 2) - (300 // 2)
+        ya = (self.winfo_screenheight() // 2) - (300 // 2)
+        self.geometry(f"{300}x{300}+{xa}+{ya}")
+        self.deiconify()
+
         self.protocol("WM_DELETE_WINDOW", lambda: self.quit())
         
