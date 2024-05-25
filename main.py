@@ -1,8 +1,8 @@
 import tkinter as tk
 from app.telas.escolha_tipo import escolha_tipo
-from app.root import caminho_icone
+from app.componentes.genericas.icone import caminho_icone
 from app.chave.conexao_firebase import conexao
-from app.assets.alertas import alerta_invalido
+from app.componentes.tela.alertas import alerta_invalido
 from tkinter import messagebox
 
 

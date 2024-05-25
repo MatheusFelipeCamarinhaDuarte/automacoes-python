@@ -1,7 +1,7 @@
 import tkinter as tk
-from app.assets.componetes_tela import nova_tela_atual, radio_botoes, rodape_da_tela
-from app.assets.alertas import alerta_invalido
-from app.assets.verificacoes import verifica_outros
+from app.componentes.tela.componetes_tela import nova_tela_atual, radio_botoes, rodape_da_tela
+from app.componentes.tela.alertas import alerta_invalido
+from app.componentes.genericas.verificacoes import verifica_outros
 from app.telas.escolha_tabela import tela_de_insercao
 
 
@@ -14,8 +14,6 @@ def tela_de_escolha_sistema(janela_principal,tela_anterior,migracao:str):
     frame_superior.pack(side=tk.TOP, padx=10, expand=True, fill=tk.BOTH)
     label_titulo = tk.Label(frame_superior, text=f"Importação de {migracao.lower()}:")
     label_titulo.pack()
-
-    
     # Criando frame do sistema de origem
     frame_sistema_origem = tk.Frame(frame_superior,padx=10, pady=10, width=20, height=100)
     frame_sistema_origem.pack(side=tk.LEFT,anchor=tk.N, padx=10)

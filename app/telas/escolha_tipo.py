@@ -1,4 +1,4 @@
-from app.assets.componetes_tela import nova_tela_atual, multiplos_botoes, rodape_da_tela
+from app.componentes.tela.componetes_tela import nova_tela_atual, multiplos_botoes, rodape_da_tela
 from app.telas.escolha_sistema import tela_de_escolha_sistema
 
 def escolha_tipo(janela_principal):

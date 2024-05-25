@@ -1,8 +1,8 @@
 import tkinter as tk
 import webbrowser
 from tkinter import messagebox
-from app.assets.componetes_tela import nova_tela_atual, rodape_da_tela, radio_botoes
-from app.assets.pegar_arquivo_tranferencia import selecionar_arquivo
+from app.componentes.tela.componetes_tela import nova_tela_atual, rodape_da_tela, radio_botoes
+from app.componentes.arquivo.pegar_arquivo_tranferencia import selecionar_arquivo
 def tela_de_insercao(tela_anterior, janela_principal, migracao,sistema_origem,sistema_destino):
     # Oculta a primeira janela e criar a nova
     tela_atual = nova_tela_atual(tela_anterior,300,230,"Inserir Dados")
