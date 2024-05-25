@@ -1,5 +1,5 @@
 from app.componentes.banco_dados.execucoes_banco import inserir_grupos_as
-
+from app.componentes.banco_dados.tratamento_de_dados.corrigir_atributos_produtos import corrigir_nome_acentos
 '''
 formato ideal:
 0 - codigo de barras
@@ -23,12 +23,11 @@ def conversor_seller_produto(matriz,cursor):
         
         
         for estrutura in estrutura_marcadorlogicas:
-            print(estrutura)
+            # print(estrutura)
 
-            try:
-                grupo, subgrupo, outros = estrutura.split('/')
-            except:
-                grupo, subgrupo = estrutura.split('/')
+            lista = estrutura.split('/')
+            grupo = corrigir_nome_acentos(lista[0])
+            subgrupo = corrigir_nome_acentos(lista[1])
 
             if grupo in grupos_dict:
                 grupos_dict[grupo].add(subgrupo)
@@ -52,7 +51,9 @@ def conversor_seller_produto(matriz,cursor):
             linha_da_nova_matriz.append(nome) # descricao do produto         
 
             estrutura = linha[8]
-            grupo, subgrupo, outros = estrutura.split('/')
+            lista = estrutura.split('/')
+            grupo = corrigir_nome_acentos(lista[0])
+            subgrupo = corrigir_nome_acentos(lista[1])
             if grupo in grupo_com_grid:
                 linha_da_nova_matriz.append(grupo_com_grid[grupo]) # grupo
             else:

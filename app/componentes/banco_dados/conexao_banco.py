@@ -1,12 +1,13 @@
 import psycopg2
 from tkinter import messagebox
 def iniciar_banco(usuario,senha,banco):
+    print(usuario,senha,banco)
     try:
         conn1 = psycopg2.connect(
             host="localhost",
-            user='postgres',
-            password='postgres',
-            database='banco_teste'
+            user=usuario,
+            password=senha,
+            database=banco
         )
         cur1 = conn1.cursor()
         return conn1, cur1

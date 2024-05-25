@@ -3,10 +3,11 @@ from tkinter import messagebox
 from app.componentes.banco_dados.tratamento_de_dados.conversor_matriz_idela import conversor_seller_produto
 
 try:
-    from app.componentes.banco_dados.conexao_banco import iniciar_banco
+    from app.componentes.banco_dados.conexao_banco import iniciar_banco,finalizar_banco
     from app.componentes.banco_dados.execucoes_banco import definir_id_com_exclusao, relatorio_erros
+    from app.componentes.banco_dados.tratamento_de_dados.corrigir_atributos_produtos import corrigir_nome_acentos,corrigir_unidade
 except:
-    from conexao_banco import iniciar_banco
+    from conexao_banco import iniciar_banco,finalizar_banco
     from app.componentes.banco_dados.execucoes_banco import definir_id_com_exclusao, relatorio_erros
 
 def cadastrar_no_banco(usuario,senha,banco,matriz,substituir:bool=False,origem:str = 'seller'):
@@ -19,7 +20,7 @@ def cadastrar_no_banco(usuario,senha,banco,matriz,substituir:bool=False,origem:s
         match origem:
             case 'seller':
                 matriz = conversor_seller_produto(matriz,cursor)
-        
+        conexao.commit()
         
         
         
@@ -42,13 +43,13 @@ def cadastrar_no_banco(usuario,senha,banco,matriz,substituir:bool=False,origem:s
             contador_produtos_totais += 1
             # Define os atributos a serem passados para o banco
             codigo_barra = produto[0] # codigo barra
-            nome = produto[1] # descricao do produto
+            nome = corrigir_nome_acentos(produto[1]) # descricao do produto
             grupo = produto[2] # grupo
             subgrupo = produto[3] # subgrupos
             preco_venda = produto[4] # preço da venda
             custo_medio = produto[5] # preco de compra
-            unid_venda = produto[6] # unidade de medida de venda
-            unid_compra = produto[7] # Unidade de medida de compra
+            unid_venda = corrigir_unidade(produto[6]) # unidade de medida de venda
+            unid_compra = corrigir_unidade(produto[7]) # Unidade de medida de compra
             fator_conversao = produto[8] # fator de conversao
             codigo_ncm = produto[9] # NCM
             
@@ -63,21 +64,38 @@ def cadastrar_no_banco(usuario,senha,banco,matriz,substituir:bool=False,origem:s
             
             # Verifica se o produto tem um destes campos como nulo, e adiciona eles a lista de erro.
             
-
-            print('não consigo converter este codigo de barras para inteiro')
-            lista_erros.append([nome,codigo_barra,preco_venda,motivo_erro])
-            if codigo_barra == '' or nome == '' or preco_venda == '' or custo_medio:
-                motivo_erro = 'Falta de dados'
+            motivo_erro = ''
+            # print('não consigo converter este codigo de barras para inteiro')
+            # lista_erros.append([nome,codigo_barra,preco_venda,motivo_erro])
+            if codigo_barra == '':
+                motivo_erro = 'Falta de codigo de barras'
                 lista_erros.append([nome,codigo_barra,preco_venda,motivo_erro])
                 print(f"Produto {nome} ERRADO!")
                 continue
+            if nome == '' :
+                motivo_erro = 'Falta de nome'
+                lista_erros.append([nome,codigo_barra,preco_venda,motivo_erro])
+                print(f"Produto {nome} ERRADO!")
+                continue
+            if preco_venda == '' :
+                motivo_erro = 'Falta de preço de venda'
+                print(produto)
+                lista_erros.append([nome,codigo_barra,preco_venda,motivo_erro])
+                print(f"Produto {nome} ERRADO!")
+                continue
+            if custo_medio =='':
+                custo_medio = '0.0'
+                # motivo_erro = 'Falta de Custo médio'
+                # lista_erros.append([nome,codigo_barra,preco_venda,motivo_erro])
+                # print(f"Produto {nome} ERRADO!")
+                # continue
             try:
                 cursor.execute("INSERT INTO produto(codigo, codigo_barra, nome, grupo, subgrupo, preco_unit, preco_custo, unid_med, unid_med_entrada, tributacao, codigo_ncm, cst_pis, cst_cofins, cst_pis_entrada, cst_cofins_entrada) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);", (id, codigo_barra, nome, grupo,subgrupo, preco_venda, custo_medio, unid_venda, unid_compra, tributacao, codigo_ncm, cst_pis, cst_cofins, cst_pis_entrada, cst_cofins_entrada))
                 id += 1
             except Exception as e:
-                lista_erros.append(nome)
-                print(e)
-
+                lista_erros.append([nome,codigo_barra,preco_venda, e])
+                print(produto)
+        conexao.commit()
         print(f'Produtos totais: {contador_produtos_totais}')    
         cursor.execute("SELECT * FROM produto;")
         result1 = cursor.fetchall()
@@ -85,9 +103,10 @@ def cadastrar_no_banco(usuario,senha,banco,matriz,substituir:bool=False,origem:s
         if lista_erros != []:
             print('Produtos com problema:')
             for item in lista_erros:
-                print(f'Linha: {item[0]}\nNome: {item[1]} - Codigo de barras: {item[2]} - preço: {item[3]}')
+                print(f'Nome: {item[0]}\nMotivo: {item[3]}')
         else:
             print("Todos os produtos foram adicionados com sucesso!!")
+        finalizar_banco(conexao, cursor)
 
 
 

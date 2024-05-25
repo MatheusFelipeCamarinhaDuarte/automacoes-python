@@ -78,8 +78,18 @@ def corrigir_kit(unidade):
     if unidade == 'KIT':
         codigo_barra = 'KIT'
         return False 
-def corrigir12():
-    pass
+def corrigir_nome_acentos(nome):
+    substitutions = {
+        'Ã': 'A', 'Á': 'A', 'À': 'A', 'Â': 'A','Ã':'A', 'Ä': 'A', 'ã': 'a', 'á': 'a', 'à': 'a', 'â': 'a', 'ä': 'a',
+        'É': 'E', 'È': 'E', 'Ê': 'E', 'Ë': 'E', 'é': 'e', 'è': 'e', 'ê': 'e', 'ë': 'e',
+        'Í': 'I', 'Ì': 'I', 'Î': 'I', 'Ï': 'I', 'í': 'i', 'ì': 'i', 'î': 'i', 'ï': 'i',
+        'Õ': 'O', 'Ô': 'O', 'Ó': 'O', 'Ò': 'O', 'Ö': 'O', 'õ': 'o', 'ô': 'o', 'ó': 'o', 'ò': 'o', 'ö': 'o',
+        'Ú': 'U', 'Ù': 'U', 'Û': 'U', 'Ü': 'U', 'ú': 'u', 'ù': 'u', 'û': 'u', 'ü': 'u',
+        'Ç': 'C', 'ç': 'c'
+    }
+    for original, replacement in substitutions.items():
+        nome = nome.replace(original, replacement)
+    return nome
 def corrigir123():
     pass
 def corrigir1234():

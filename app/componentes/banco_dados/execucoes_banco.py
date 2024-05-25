@@ -4,7 +4,7 @@ import csv
 def definir_id_com_exclusao(substituir, cursor):
     id = 1
     if substituir:
-        cursor.execute("DELETE FROM produtos")
+        cursor.execute("DELETE FROM produto")
     else:
         cursor.execute("SELECT * FROM produto")
         result1 = cursor.fetchall()
@@ -40,25 +40,23 @@ def inserir_grupos_as(dicionario:dict, cursor):
     cursor.execute(f"DELETE FROM grupo_produto")
     cursor.execute(f"DELETE FROM subgrupo_produto")
     id = 1
+    id_sub = 1
     grupo_com_grid = {} 
-    for grupo in dicionario:
+    subgrupo_com_grid = {}
+    for grupo, subgrupos in dicionario.items():
         cursor.execute("INSERT INTO grupo_produto (codigo,nome,flag) VALUES (%s,%s,%s);", (id,grupo,'A'))
-        cursor.execute("SELECT * FROM grupo_produto WHERE codigo = %s;",(id))
-        id += 1
+        cursor.execute("SELECT * FROM grupo_produto WHERE codigo = %s;", (id,))
         result1 = cursor.fetchall()
         grid_grupo = result1[0][3]
         grupo_com_grid[grupo] = grid_grupo
-    id = 1
-    subgrupo_com_grid = {}
-    for grupos, subgrupos in grupo.items():
         for subgrupo in subgrupos:
-            grupo_do_subgrupo = grupo_com_grid[grupos]
-            cursor.execute("INSERT INTO subgrupo_produto (codigo,nome,grupo,flag) VALUES (%s,%s,%s);", (id,subgrupo,grupo_do_subgrupo,'A'))
-            cursor.execute("SELECT * FROM grupo_produto WHERE codigo = %s;",(id))
-            id += 1
+            cursor.execute("INSERT INTO subgrupo_produto (codigo,nome,grupo,flag) VALUES (%s,%s,%s,%s);", (id_sub,subgrupo,grid_grupo,'A'))
+            cursor.execute("SELECT * FROM subgrupo_produto WHERE codigo = %s;",(id_sub,))
             result1 = cursor.fetchall()
             grid_subgrupo = result1[0][4]
             subgrupo_com_grid[subgrupo] = grid_subgrupo
+            id_sub += 1
+        id += 1        
     return grupo_com_grid, subgrupo_com_grid
 
 # matriz = [
