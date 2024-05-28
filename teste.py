@@ -1,13 +1,4 @@
-import psycopg2
-try:
+codigo = '22001000'
+codigo_ncm = codigo[:4] + '.' + codigo[4:6] +'.' + codigo[6:]
 
-    conn1 = psycopg2.connect(
-        port='5432',
-        host="localhost",
-        user='postgres',
-        password='postgres',
-        database='banco_teste'
-    )
-    cur1 = conn1.cursor()
-except:
-    print('nãoconsegue')
+print(codigo_ncm)

@@ -21,12 +21,14 @@ def selecionar_arquivo(tela_atual,janela_principal,migracao,sistema_origem,siste
             caminho_app = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
             
             caminho_absoluto = os.path.join(caminho_app, 'temp','dados')
+            caminho_temp = os.path.join(caminho_app, 'temp','dados',nome_arquivo)
             
             # Capturo o nome antigo do arquivo e defino para um outro nome para ser o padrão
             antigo_nome = os.path.join(caminho_absoluto,nome_arquivo)
             novo_nome = os.path.join(caminho_absoluto,'arquivo_temporario'+extensao_arquivo)
+
             
-            # Copio e renomeio o arquivo 
+            # Copio e renomeio o arquivo
             shutil.copy(arquivo_selecionado, caminho_absoluto)
             shutil.move(antigo_nome,novo_nome)
             inserir_no_banco(tela_atual,janela_principal,migracao,sistema_origem,sistema_destino,extensao_desejada)

@@ -1,14 +1,16 @@
 import psycopg2
+import tkinter as tk
 from tkinter import messagebox
 from app.componentes.banco_dados.tratamento_de_dados.conversor_matriz_idela import conversor_seller_produto
 
 try:
     from app.componentes.banco_dados.conexao_banco import iniciar_banco,finalizar_banco
-    from app.componentes.banco_dados.execucoes_banco import definir_id_com_exclusao, relatorio_erros
+    from app.componentes.banco_dados.execucoes_banco import definir_id_com_exclusao
     from app.componentes.banco_dados.tratamento_de_dados.corrigir_atributos_produtos import corrigir_nome_acentos,corrigir_unidade
+    from app.componentes.arquivo.relatorios import relatorio_erros_produto, baixar_arquivo_relatorio
 except:
     from conexao_banco import iniciar_banco,finalizar_banco
-    from app.componentes.banco_dados.execucoes_banco import definir_id_com_exclusao, relatorio_erros
+    from app.componentes.banco_dados.execucoes_banco import definir_id_com_exclusao
 
 def cadastrar_no_banco(usuario,senha,banco,matriz,substituir:bool=False,origem:str = 'seller'):
     conexao, cursor = iniciar_banco(usuario,senha,banco)
@@ -52,14 +54,16 @@ def cadastrar_no_banco(usuario,senha,banco,matriz,substituir:bool=False,origem:s
             unid_compra = corrigir_unidade(produto[7]) # Unidade de medida de compra
             fator_conversao = produto[8] # fator de conversao
             codigo_ncm = produto[9] # NCM
-            
+            cursor.execute("SELECT * FROM tributacao WHERE tributacao = 0;")
+            result = cursor.fetchall()
             
             # codigo_reduzido = produto[7] # por enquanto sem uso
             # cest = produto[10] # por enquanto sem uso
             # cod_speed = produto[11] # por enquanto sem uso
 
             # campos com dados genéricos fixos
-            tributacao = '090'
+            
+            tributacao = result[0][0]
             cst_pis,cst_cofins,cst_pis_entrada,cst_cofins_entrada = 99,99,99,99
             
             # Verifica se o produto tem um destes campos como nulo, e adiciona eles a lista de erro.
@@ -69,6 +73,11 @@ def cadastrar_no_banco(usuario,senha,banco,matriz,substituir:bool=False,origem:s
             # lista_erros.append([nome,codigo_barra,preco_venda,motivo_erro])
             if codigo_barra == '':
                 motivo_erro = 'Falta de codigo de barras'
+                lista_erros.append([nome,codigo_barra,preco_venda,motivo_erro])
+                print(f"Produto {nome} ERRADO!")
+                continue
+            if len(codigo_barra) < 5:
+                motivo_erro = 'codigo de barras inválido'
                 lista_erros.append([nome,codigo_barra,preco_venda,motivo_erro])
                 print(f"Produto {nome} ERRADO!")
                 continue
@@ -96,19 +105,44 @@ def cadastrar_no_banco(usuario,senha,banco,matriz,substituir:bool=False,origem:s
                 lista_erros.append([nome,codigo_barra,preco_venda, e])
                 print(produto)
         conexao.commit()
-        print(f'Produtos totais: {contador_produtos_totais}')    
+        mensagem = tk.Toplevel()
+        xa = (mensagem.winfo_screenwidth() // 2) - (200 // 2)
+        ya = (mensagem.winfo_screenheight() // 2) - (200 // 2)
+        mensagem.geometry(f"{200}x{200}+{xa}+{ya}")        
+        label = tk.Label(mensagem, text=f'Produtos totais: {contador_produtos_totais}')
+        label.pack()
+        
+        # print(f'Produtos totais: {contador_produtos_totais}')
         cursor.execute("SELECT * FROM produto;")
         result1 = cursor.fetchall()
-        print(f'Produtos adicionados: {len(result1)}')
+        
+        # print(f'Produtos adicionados: {len(result1)}')
+        label1 = tk.Label(mensagem, text=f'Produtos adicionados: {len(result1)}')
+        label1.pack()
+        
         if lista_erros != []:
-            print('Produtos com problema:')
-            for item in lista_erros:
-                print(f'Nome: {item[0]}\nMotivo: {item[3]}')
+            label2 = tk.Label(mensagem, text=f'Produtos com problema: {contador_produtos_totais - len(result1)}')
+            label2.pack()
+            # print('Produtos com problema: {}')
+            # for item in lista_erros:
+                # print(f'Nome: {item[0]}\nMotivo: {item[3]}')
+            nome_arquivo = relatorio_erros_produto(lista_erros)
+            botao = tk.Button(mensagem, text='Baixar', command=lambda: baixar_arquivo_relatorio(nome_arquivo, mensagem))
+            botao.pack()
+            # app/temp/relatorios/relatorio_erro_produto.csv
         else:
-            print("Todos os produtos foram adicionados com sucesso!!")
+            label2 = tk.Label(mensagem, text="Todos os produtos foram adicionados com sucesso!!")
+            label2.pack()
+            # print("Todos os produtos foram adicionados com sucesso!!")
+        
+        
+        
+        
+        
+        
         finalizar_banco(conexao, cursor)
 
 
 
-# relatorio_erros()
+# relatorio_erros_produto()
 # cadastrar_no_banco("postgres", "postgres","banco_teste","")

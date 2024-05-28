@@ -17,20 +17,6 @@ def definir_id_com_exclusao(substituir, cursor):
     return id
 
 
-def relatorio_erros(relatorio_erro):
-    # Nome do arquivo CSV
-    nome_arquivo = "app/temp/relatorios/relatorio_erro_produto.csv"
-
-    # Abre o arquivo em modo de escrita
-    with open(nome_arquivo, mode="w", newline="") as arquivo_csv:
-        escritor_csv = csv.writer(arquivo_csv)
-
-        for linha in relatorio_erro:
-            escritor_csv.writerow(linha)
-    with open(nome_arquivo, mode="r", newline="") as arquivo_csv:
-        leitor_csv = csv.reader(arquivo_csv)
-        matriz_lida = [linha for linha in leitor_csv]
-        print(matriz_lida)
 
 
 

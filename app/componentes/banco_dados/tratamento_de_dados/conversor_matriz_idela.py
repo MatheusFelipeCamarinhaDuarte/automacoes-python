@@ -78,7 +78,8 @@ def conversor_seller_produto(matriz,cursor):
             fator_conversao = linha[9]
             linha_da_nova_matriz.append(fator_conversao) # fator de conversao
 
-            codigo_ncm = linha[2]
+            codigo = linha[2]
+            codigo_ncm = codigo[:4] + '.' + codigo[4:6] +'.' + codigo[6:] #NCM formatado
             linha_da_nova_matriz.append(codigo_ncm) # NCM
             nova_matriz.append(linha_da_nova_matriz)
             
