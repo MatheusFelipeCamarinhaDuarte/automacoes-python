@@ -19,7 +19,8 @@ def tela_de_escolha_sistema(janela_principal,tela_anterior,migracao:str):
     frame_sistema_origem.pack(side=tk.LEFT,anchor=tk.N, padx=10)
     label_titulo = tk.Label(frame_sistema_origem, text="Escolha o sistema de origem:")
     label_titulo.pack(anchor=tk.W)
-    sistemas_origem = ["EMsys","Posto Fácil", "Seller", "Outros"]
+    # sistemas_origem = ["EMsys","Posto Fácil", "Seller", "Outros"]
+    sistemas_origem = ["Seller"]
     var_origem = radio_botoes(sistemas_origem,frame_sistema_origem)
 
     # Criando frame do sistema de destino

@@ -2,7 +2,6 @@ import psycopg2
 import tkinter as tk
 from tkinter import messagebox
 from app.componentes.banco_dados.tratamento_de_dados.conversor_matriz_idela import conversor_seller_produto
-
 try:
     from app.componentes.banco_dados.conexao_banco import iniciar_banco,finalizar_banco
     from app.componentes.banco_dados.execucoes_banco import definir_id_com_exclusao
@@ -12,7 +11,7 @@ except:
     from conexao_banco import iniciar_banco,finalizar_banco
     from app.componentes.banco_dados.execucoes_banco import definir_id_com_exclusao
 
-def cadastrar_no_banco(usuario,senha,banco,matriz,substituir:bool=False,origem:str = 'seller'):
+def cadastrar_no_banco(usuario,senha,banco,matriz,janela_principal,tela_atual,substituir:bool=False,origem:str = 'seller',):
     conexao, cursor = iniciar_banco(usuario,senha,banco)
     if conexao:
         print("CORRETOS")
@@ -105,33 +104,39 @@ def cadastrar_no_banco(usuario,senha,banco,matriz,substituir:bool=False,origem:s
                 lista_erros.append([nome,codigo_barra,preco_venda, e])
                 print(produto)
         conexao.commit()
-        mensagem = tk.Toplevel()
-        xa = (mensagem.winfo_screenwidth() // 2) - (200 // 2)
-        ya = (mensagem.winfo_screenheight() // 2) - (200 // 2)
-        mensagem.geometry(f"{200}x{200}+{xa}+{ya}")        
-        label = tk.Label(mensagem, text=f'Produtos totais: {contador_produtos_totais}')
-        label.pack()
-        
         # print(f'Produtos totais: {contador_produtos_totais}')
-        cursor.execute("SELECT * FROM produto;")
-        result1 = cursor.fetchall()
         
         # print(f'Produtos adicionados: {len(result1)}')
-        label1 = tk.Label(mensagem, text=f'Produtos adicionados: {len(result1)}')
-        label1.pack()
         
         if lista_erros != []:
+            mensagem = tk.Toplevel()
+            xa = (mensagem.winfo_screenwidth() // 2) - (200 // 2)
+            ya = (mensagem.winfo_screenheight() // 2) - (200 // 2)
+            mensagem.geometry(f"{200}x{200}+{xa}+{ya}")            
+            label = tk.Label(mensagem, text=f'Produtos totais: {contador_produtos_totais}')
+            label.pack()
+            cursor.execute("SELECT * FROM produto;")
+            result1 = cursor.fetchall()
+            label1 = tk.Label(mensagem, text=f'Produtos adicionados: {len(result1)}')
+            label1.pack()
             label2 = tk.Label(mensagem, text=f'Produtos com problema: {contador_produtos_totais - len(result1)}')
             label2.pack()
             # print('Produtos com problema: {}')
             # for item in lista_erros:
                 # print(f'Nome: {item[0]}\nMotivo: {item[3]}')
             nome_arquivo = relatorio_erros_produto(lista_erros)
-            botao = tk.Button(mensagem, text='Baixar', command=lambda: baixar_arquivo_relatorio(nome_arquivo, mensagem))
+            botao = tk.Button(mensagem, text='Baixar', command=lambda: baixar_arquivo_relatorio(nome_arquivo, mensagem, janela_principal,tela_atual))
             botao.pack()
             # app/temp/relatorios/relatorio_erro_produto.csv
         else:
+            from app.telas.escolha_tipo import escolha_tipo
             label2 = tk.Label(mensagem, text="Todos os produtos foram adicionados com sucesso!!")
+            resposta = messagebox.askyesno('Teste',"Todos os dados foram inseridos com sucesso!\nDeseja voltar ao menu?")
+            if resposta:
+                escolha_tipo(janela_principal)
+                tela_atual.withdraw()
+            else:
+                pass
             label2.pack()
             # print("Todos os produtos foram adicionados com sucesso!!")
         

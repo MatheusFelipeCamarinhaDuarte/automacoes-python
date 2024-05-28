@@ -7,17 +7,17 @@ from app.componentes.tela.botoes_universais import botao_sair,botao_voltar
 
 def nova_tela_atual(tela_anterior,largura:int,altura:int, titulo:str):
     # Ocultação da janela anterior
-    tela_anterior.withdraw()
     
     # Dimensões da tela com as informações passadas e sendo direcionadas para o meio da tela
     # Cria a janela nova com o título passado
-    tela_atual = NovaTela(tela_anterior, width=largura, height=altura)
+    tela_atual = NovaTela()
     tela_atual.withdraw()
-    xa = (tela_anterior.winfo_screenwidth() // 2) - (largura // 2)
-    ya = (tela_anterior.winfo_screenheight() // 2) - (altura // 2)
+    xa = (tela_atual.winfo_screenwidth() // 2) - (largura // 2)
+    ya = (tela_atual.winfo_screenheight() // 2) - (altura // 2)
     tela_atual.geometry(f"{largura}x{altura}+{xa}+{ya}")
     tela_atual.deiconify()
     tela_atual.title(titulo)
+    tela_anterior.withdraw()
     
 
     # Retorna a janela atual

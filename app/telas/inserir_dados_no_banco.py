@@ -19,8 +19,8 @@ def inserir_no_banco(tela_anterior,janela_principal,migracao,sistema_origem,sist
     tipos_insercao = ['SUBISTITUIR',"ADICIONAR"]
     b0, b1 = multiplos_botoes(tipos_insercao,frame_superior,20,5,15,1)
     
-    b0.config(command=lambda:[cadastrar_no_banco(input_usuario.get(),input_senha.get(),input_nome_banco.get(),matriz,substituir=True) if (input_nome_banco.get() !='' and input_usuario.get() !='' and input_senha.get() !='') else messagebox.showerror("Erro", f"Você precisa preencher todos os campos antes de continuar")])
-    b1.config(command=lambda:[cadastrar_no_banco(input_usuario.get(),input_senha.get(),input_nome_banco.get(),matriz) if (input_nome_banco.get() !='' and input_usuario.get() !='' and input_senha.get() !='') else messagebox.showerror("Erro", f"Você precisa preencher todos os campos antes de continuar")])
+    b0.config(command=lambda:[cadastrar_no_banco(input_usuario.get(),input_senha.get(),input_nome_banco.get(),matriz, janela_principal=janela_principal,tela_atual=tela_atual, substituir=True) if (input_nome_banco.get() !='' and input_usuario.get() !='' and input_senha.get() !='') else messagebox.showerror("Erro", f"Você precisa preencher todos os campos antes de continuar")])
+    b1.config(command=lambda:[cadastrar_no_banco(input_usuario.get(),input_senha.get(),input_nome_banco.get(),matriz, janela_principal=janela_principal,tela_atual=tela_atual) if (input_nome_banco.get() !='' and input_usuario.get() !='' and input_senha.get() !='') else messagebox.showerror("Erro", f"Você precisa preencher todos os campos antes de continuar")])
 
     frame_inferior = tk.Frame(tela_atual)
     frame_inferior.pack(expand=True, fill=tk.X)
