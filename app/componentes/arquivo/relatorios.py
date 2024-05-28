@@ -35,7 +35,7 @@ def baixar_arquivo_relatorio(nome:str,tela,janela_principal,tela_atual):
             tela.destroy()
             resposta = messagebox.askyesno('Teste',"Deseja voltar ao menu?")
             if resposta:
-                from app.telas.escolha_tipo import escolha_tipo
+                from app.telas.tela_2_escolha_tipo import escolha_tipo
                 escolha_tipo(janela_principal)
                 tela_atual.withdraw()
             else:

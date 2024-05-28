@@ -3,7 +3,13 @@ try:
 except:
     from tkinter import Toplevel as NovaTela
 import tkinter as tk
-from app.componentes.tela.botoes_universais import botao_sair,botao_voltar
+
+
+
+def limpar_frame(frame):
+    # Destroi todos os widgets filhos do frame
+    for widget in frame.winfo_children():
+        widget.destroy()
 
 def nova_tela_atual(tela_anterior,largura:int,altura:int, titulo:str):
     # Ocultação da janela anterior
@@ -25,10 +31,23 @@ def nova_tela_atual(tela_anterior,largura:int,altura:int, titulo:str):
 
 
 def rodape_da_tela(frame_inferior,janela_principal,tela_anterior,tela_atual):
+    from app.componentes.tela.botoes_universais import botao_sair,botao_voltar
+    
     frame_rodape = tk.Frame(frame_inferior)
     frame_rodape.pack(anchor=tk.S,expand=True, fill=tk.X)
     botao_voltar(frame_rodape,tela_anterior,tela_atual)
     botao_sair(frame_rodape,janela_principal)
+    return frame_rodape
+
+def novo_rodape(frame_inferior,tela_atual,func_tela_anterior = False):
+    from app.componentes.tela.botoes_universais import botao_sair,botao_voltar_novo
+    
+    frame_rodape = tk.Frame(frame_inferior)
+    frame_rodape.pack(anchor=tk.S,expand=True, fill=tk.X)
+    if func_tela_anterior:
+        botao_voltar_novo(frame_rodape,func_tela_anterior,tela_atual)
+    
+    botao_sair(frame_rodape,tela_atual)
     return frame_rodape
 
 def input_com_titulo(frame_pertencente, titulo:str, largura:int=20,lista=False,padiy:int = 10,padix:int = 10):

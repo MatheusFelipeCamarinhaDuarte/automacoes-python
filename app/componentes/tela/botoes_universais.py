@@ -16,19 +16,12 @@ def botao_voltar(ultimo_frame,tela_anterior,tela_atual):
     voltar = tk.Button(ultimo_frame, text="Voltar", command=lambda: [voltar_uma_tela(tela_anterior,tela_atual)])
     voltar.pack(side=tk.LEFT, pady=10, padx=10)
     return voltar
+def botao_voltar_novo(ultimo_frame,tela_anterior,tela_atual):
+    voltar = tk.Button(ultimo_frame, text="Voltar", command=lambda: [tela_anterior()])
+    voltar.pack(side=tk.LEFT, pady=10, padx=10)
+    return voltar
 
-def botao_sair(ultimo_frame,janela_principal,padix=10,padiy=10):
+def botao_sair(ultimo_frame,janela_principal,padix:int=10,padiy:int=10):
     sair = tk.Button(ultimo_frame, text="Sair", command=lambda: janela_principal.quit())
     sair.pack(side=tk.RIGHT, pady=padiy, padx=padix)
     return sair
-
-#Teste unitário para a verificação dos componentes
-if __name__ == "__main__":
-    # Exemplo de uso
-    root = tk.Tk()
-
-    frame = tk.Frame(root, width=300, height=300)
-    frame.pack()
-
-
-    root.mainloop()

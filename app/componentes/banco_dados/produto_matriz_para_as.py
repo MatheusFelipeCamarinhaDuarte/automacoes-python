@@ -131,7 +131,7 @@ def cadastrar_no_banco(usuario,senha,banco,matriz,janela_principal,tela_atual,su
             botao.pack()
             # app/temp/relatorios/relatorio_erro_produto.csv
         else:
-            from app.telas.escolha_tipo import escolha_tipo
+            from app.telas.tela_2_escolha_tipo import escolha_tipo
             label2 = tk.Label(mensagem, text="Todos os produtos foram adicionados com sucesso!!")
             resposta = messagebox.askyesno('Teste',"Todos os dados foram inseridos com sucesso!\nDeseja voltar ao menu?")
             if resposta:
