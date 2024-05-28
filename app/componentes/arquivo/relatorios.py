@@ -11,7 +11,8 @@ def relatorio_erros_produto(relatorio_erro):
     # Abre o arquivo em modo de escrita
     with open(nome_arquivo, mode="w", newline="") as arquivo_csv:
         escritor_csv = csv.writer(arquivo_csv, delimiter=';')
-
+        cabecalho = ['Nome', 'Código de barras', 'Preço de venda', 'Motivo de erro']
+        escritor_csv.writerow(cabecalho)
         for linha in relatorio_erro:
             escritor_csv.writerow(linha)
     return 'relatorio_erro_produto'

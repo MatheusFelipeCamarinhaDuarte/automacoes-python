@@ -9,7 +9,7 @@ def tela_de_insercao(tela_anterior, janela_principal, migracao,sistema_origem,si
     
     frame_superior = tk.Frame(tela_atual)
     frame_superior.pack(side=tk.TOP, padx=10,pady=20, expand=True, fill=tk.BOTH)
-    extensoes_aceitas = ['.xml','.csv','.xls']
+    extensoes_aceitas = ['.xls']
     var_extensoes = radio_botoes(extensoes_aceitas,frame_superior, orientacao=tk.CENTER, lista=True)
     
     button_selecionar = tk.Button(frame_superior, text="Selecionar Arquivo", command=lambda:[selecionar_arquivo(tela_atual,janela_principal,migracao,sistema_origem,sistema_destino,var_extensoes.get()) if (var_extensoes.get() !='Nenhuma opção selecionada') else messagebox.showerror("Erro", f"Selecione uma extensão antes de prosseguir.")])

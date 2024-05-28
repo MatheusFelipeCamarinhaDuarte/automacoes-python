@@ -91,14 +91,16 @@ def cadastrar_no_banco(usuario,senha,banco,matriz,janela_principal,tela_atual,su
                 lista_erros.append([nome,codigo_barra,preco_venda,motivo_erro])
                 print(f"Produto {nome} ERRADO!")
                 continue
-            if custo_medio =='':
-                custo_medio = '0.0'
-                # motivo_erro = 'Falta de Custo médio'
-                # lista_erros.append([nome,codigo_barra,preco_venda,motivo_erro])
-                # print(f"Produto {nome} ERRADO!")
+            if custo_medio =='' or custo_medio == '0' or custo_medio == '0.0' or custo_medio == '0.00' or custo_medio == None:
+                custo_medio = '0.10'
+                motivo_erro = 'Falta de Custo médio (ele foi substituido pelo padrão 0.10)'
+                lista_erros.append([nome,codigo_barra,preco_venda,motivo_erro])
+                print(f"Produto {nome} ERRADO!")
+                # print(custo_medio)
                 # continue
             try:
                 cursor.execute("INSERT INTO produto(codigo, codigo_barra, nome, grupo, subgrupo, preco_unit, preco_custo, unid_med, unid_med_entrada, tributacao, codigo_ncm, cst_pis, cst_cofins, cst_pis_entrada, cst_cofins_entrada) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);", (id, codigo_barra, nome, grupo,subgrupo, preco_venda, custo_medio, unid_venda, unid_compra, tributacao, codigo_ncm, cst_pis, cst_cofins, cst_pis_entrada, cst_cofins_entrada))
+                # print(id, custo_medio)
                 id += 1
             except Exception as e:
                 lista_erros.append([nome,codigo_barra,preco_venda, e])
@@ -119,7 +121,7 @@ def cadastrar_no_banco(usuario,senha,banco,matriz,janela_principal,tela_atual,su
             result1 = cursor.fetchall()
             label1 = tk.Label(mensagem, text=f'Produtos adicionados: {len(result1)}')
             label1.pack()
-            label2 = tk.Label(mensagem, text=f'Produtos com problema: {contador_produtos_totais - len(result1)}')
+            label2 = tk.Label(mensagem, text=f'Produtos com problema: {len(lista_erros)}')
             label2.pack()
             # print('Produtos com problema: {}')
             # for item in lista_erros:
