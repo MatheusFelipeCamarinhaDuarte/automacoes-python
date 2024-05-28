@@ -22,7 +22,7 @@ def selecionar_arquivo(tela_atual,janela_principal,migracao,sistema_origem,siste
             
             caminho_absoluto = os.path.join(caminho_app, 'temp','dados')
             caminho_temp = os.path.join(caminho_app, 'temp','dados',nome_arquivo)
-            
+            print(caminho_temp)
             # Capturo o nome antigo do arquivo e defino para um outro nome para ser o padrão
             antigo_nome = os.path.join(caminho_absoluto,nome_arquivo)
             novo_nome = os.path.join(caminho_absoluto,'arquivo_temporario'+extensao_arquivo)
