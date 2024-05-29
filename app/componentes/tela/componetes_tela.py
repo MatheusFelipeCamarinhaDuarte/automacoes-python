@@ -1,17 +1,89 @@
-try:
-    from app.componentes.genericas.icone import NovaTela
-except:
-    from tkinter import Toplevel as NovaTela
 import tkinter as tk
+class Janela(tk.Tk):
+    """Janela principal da nossa aplicação que herda tk.Tk do Tkinter,
+    com o objetivo de ser uma single-page aplication e adiciona funções
+    extras como o Limpar
+    
+    A janela principal já inicia com nome fixo e icone de nossa aplicação,
+    além de fixar a largura e altura, e realizar um protocolo correto de quit()
+    caso alguém delete a janela pelo botao.
+    """
+    from typing import Callable, Optional
+    def __init__(self):
+        """Método de criação de tela personalizada
+        """
+        from app.componentes.genericas.icone import caminho_icone
+        super().__init__()
+        self.title("Matheus Solutions")
+        self.iconbitmap(caminho_icone())
+        self.resizable(False, False)
+        self.protocol("WM_DELETE_WINDOW", lambda: self.quit())
 
+    def limpar(self):
+        """Método para limpar todos os widgets
 
+        Returns:
+            Janela: retorna a janela limpa
+        """
+        for widget in self.winfo_children():
+            widget.destroy()
+        return self
 
-def limpar_frame(frame):
-    # Destroi todos os widgets filhos do frame
-    for widget in frame.winfo_children():
-        widget.destroy()
+    def rodape(self, frame_inferior:tk.Frame, func_tela_anterior:Optional[Callable[[], None]] = None) -> tk.Frame:
+        """Método que chame e adiciona um frame de rodapé com funções voltar e sair.
 
+        Args:
+            frame_inferior (tk.Frame): Frame em que se localiza a parte de baixo da janela.
+            func_tela_anterior (function, optional): Aqui fica a função da geração da tela 
+            anterior, sem ela, o código não adiciona o botão voltar. Defaults to False.
+
+        Returns:
+            tk.Frame: Frame equivalente ao rodape da janela.
+        """        
+        
+        # A partir do frame inferior, cria um outro frame destinado ao rodapé
+        frame_rodape = tk.Frame(frame_inferior)
+        frame_rodape.pack(anchor=tk.S,expand=True, fill=tk.X)
+        
+        # Caso tenha a função da tela anterior, adiciona a tela voltar
+        if func_tela_anterior:
+            voltar = tk.Button(frame_rodape, text="Voltar", command=lambda: [func_tela_anterior(self)])
+            voltar.pack(side=tk.LEFT, pady=10, padx=10)
+        
+        # Adiciona o botão de sair da aplicação com o devido
+        sair = tk.Button(frame_rodape, text="Sair", command=lambda: self.quit())
+        sair.pack(side=tk.RIGHT, pady=10, padx=10)
+        
+        # Retorna o frame do rodape (Já ligado ao frame inferior)
+        return frame_rodape
+
+    def multiplos_botoes(self, dicionario_botoes:dict, frame_pertencente:tk.Frame, largura_botao:int = 20, orientacao=tk.CENTER) -> list[tk.Button]:
+        """Método para criar multiplos botões em sequência um do outro.
+
+        Args:
+            dicionario_botoes (dict): um dicionario onde a chave é o text do
+            botao e o valor é a função passada por meio de lambda.
+            frame_pertencente (tk.Frame): Frame onde o botão será colocado
+            largura_botao (int, optional): largura padrão do botão. Defaults to 20.
+            orientacao (optional): Orientação do botão (padrão é centro). Defaults to tk.CENTER.
+
+        Returns:
+            list[tk.Button]: Retorna uma lista de botões para caso queria modificar algo nele
+        """
+        # Gera uma lista vazia
+        todos = []
+        # Para cada nome gerado, cria um botao com a respectiva funcao dele e adiciona na lista
+        for texto, funcao in dicionario_botoes.items():
+            button = tk.Button(frame_pertencente, text=texto, width=largura_botao,height=1, command=funcao)
+            button.pack(anchor=orientacao, pady=5, padx=10)
+            todos.append(button)
+        return todos
 def nova_tela_atual(tela_anterior,largura:int,altura:int, titulo:str):
+    try:
+        from app.componentes.genericas.icone import NovaTela
+    except:
+        from tkinter import Toplevel as NovaTela
+
     # Ocultação da janela anterior
     
     # Dimensões da tela com as informações passadas e sendo direcionadas para o meio da tela
@@ -33,6 +105,7 @@ def nova_tela_atual(tela_anterior,largura:int,altura:int, titulo:str):
 def rodape_da_tela(frame_inferior,janela_principal,tela_anterior,tela_atual):
     from app.componentes.tela.botoes_universais import botao_sair,botao_voltar
     
+    
     frame_rodape = tk.Frame(frame_inferior)
     frame_rodape.pack(anchor=tk.S,expand=True, fill=tk.X)
     botao_voltar(frame_rodape,tela_anterior,tela_atual)
@@ -51,6 +124,8 @@ def novo_rodape(frame_inferior,tela_atual,func_tela_anterior = False):
     return frame_rodape
 
 def input_com_titulo(frame_pertencente, titulo:str, largura:int=20,lista=False,padiy:int = 10,padix:int = 10):
+    
+
     # Cria o label com o título passado
     frame_conjunto = tk.Frame(frame_pertencente)
     frame_conjunto.pack()
@@ -72,6 +147,8 @@ def input_com_titulo(frame_pertencente, titulo:str, largura:int=20,lista=False,p
 
 
 def radio_botoes(lista_radio:list, frame_pertencente,orientacao=tk.W,lista:bool=False):
+    
+
     # Definição da variável que indica o radio_button
     var_opcao = tk.StringVar(value='Nenhuma opção selecionada')
     frame_dos_radio_buttons = tk.Frame(frame_pertencente)
@@ -91,16 +168,20 @@ def radio_botoes(lista_radio:list, frame_pertencente,orientacao=tk.W,lista:bool=
     # Retorna a variável que mantém o valor selecionado
     return var_opcao
 
-def multiplos_botoes(dicionario_botoes:list, frame_pertencente,padix:int = 10,padiy:int = 5, largura_botao:int = 20, altura_botao:int = 1, orientacao=tk.CENTER):
+def multiplos_botoes(lista_botoes:list, frame_pertencente,padix:int = 10,padiy:int = 5, largura_botao:int = 20, altura_botao:int = 1, orientacao=tk.CENTER):
+    
+
     todos = []
-    for texto in dicionario_botoes:
-        button = tk.Button(frame_pertencente, text=texto, width=largura_botao,height=altura_botao, command=lambda: dicionario_botoes[texto])
+    for texto in lista_botoes:
+        button = tk.Button(frame_pertencente, text=texto, width=largura_botao,height=altura_botao, command=lambda: lista_botoes[texto])
         button.pack(anchor=orientacao,pady=padiy,padx=padix)
         todos.append(button)
     # print(todos)
     return todos
 # Teste unitário para verificação dos componentes
 if __name__ == "__main__":
+    
+
     # Exemplo de uso
     root = tk.Tk()
 
