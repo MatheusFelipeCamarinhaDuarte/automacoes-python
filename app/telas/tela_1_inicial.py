@@ -7,22 +7,11 @@ def tela_inicial():
     
     # Importações
     import tkinter as tk
+    from app.classes.janela import Janela
     from app.telas.tela_2_escolha_tipo import escolha_tipo
-    from app.componentes.genericas.icone import caminho_icone
-    from app.componentes.tela.componetes_tela import Janela
     
     # Criação da janela principal
-    # janela_principal = tk.Tk()
     janela_principal = Janela()
-    janela_principal.withdraw()
-    # Colocado o título e caminho de icone para a janela
-    janela_principal.title("Matheus Solutions")
-    icone = caminho_icone()
-    janela_principal.iconbitmap(icone)
-    janela_principal.deiconify()
-    
-    # Travando as dimensões da janela
-    janela_principal.resizable(False, False)
     
     # Colocando as dimensões iniciais (e fixas) da tela
     altura = 400
@@ -41,11 +30,3 @@ def tela_inicial():
     
     # Retornando a primeira tela criada
     return janela_principal
-
-
-
-
-# Teste individual da tela.
-if __name__ == "__main__":
-    app = tela_inicial()
-    app.mainloop()
