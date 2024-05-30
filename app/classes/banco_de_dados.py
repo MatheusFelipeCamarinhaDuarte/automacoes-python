@@ -100,27 +100,23 @@ class Banco_de_dados():
             matriz = self.troca_de_grupo(matriz)
             
             lista_erros = []
+            lista_tributacoes = []
             contador_produtos_totais = 0
             cursor.execute("SELECT * FROM tributacao WHERE tributacao = 0;")
             result = cursor.fetchall()
+            cursor.execute("SELECT codigo FROM tributacao;")
+            resultado_cd_tributacao = cursor.fetchall()
+            for item in resultado_cd_tributacao:
+                lista_tributacoes.append(item[0])
             for produto in matriz:
                 contador_produtos_totais += 1
                 
                 codigo_barra,nome,grupo,subgrupo,preco_venda,custo_medio,unid_venda,unid_compra,fator_conversao,codigo_ncm,cst_pis,cst_cofins,cst_pis_entrada,cst_cofins_entrada = produto[0],produto[1],produto[2],produto[3],produto[4],produto[5],produto[6],produto[7],produto[8],produto[9],produto[11],produto[12],produto[13],produto[14]
-                
-                # Define os atributos a serem passados para o banco
-                # codigo_barra = produto[0] # codigo barra
-                # nome = produto[1] # descricao do produto
-                # grupo = produto[2] # grupo
-                # subgrupo = produto[3] # subgrupos
-                # preco_venda = produto[4] # preço da venda
-                # custo_medio = produto[5] # preco de compra
-                # unid_venda = produto[6] # unidade de medida de venda
-                # unid_compra = produto[7] # Unidade de medida de compra
-                # fator_conversao = produto[8] # fator de conversao
-                # codigo_ncm = produto[9] # NCM
+
                 try:
                     tributacao = produto[10]
+                    if tributacao not in lista_tributacoes:
+                        tributacao = result[0][0]
                     if tributacao == '':
                         tributacao = result[0][0]
                 except:
