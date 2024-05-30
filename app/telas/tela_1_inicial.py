@@ -21,7 +21,7 @@ def tela_inicial():
     janela_principal.geometry(f"{largura}x{altura}+{x}+{y}")
     
     # Colocando a linha de apresentação do projeto
-    apresentacao = tk.Label(janela_principal, text="Projeto de importação de dados para dentro do banco")
+    apresentacao = tk.Label(janela_principal, text="Projeto de importação de dados entre sistemas")
     apresentacao.pack(anchor=tk.CENTER, expand=True)
     
     # Colocando a linha de inícia do código em si. Uma vez colocado, ele não volta para cá
