@@ -94,7 +94,15 @@ class Correcao():
                 return 'T'
             case 'UNIDADE':
                 return 'UN'
+            case 'MILHEIRO':
+                return 'UN'
+            case 'MAÇO':
+                return 'UN'
             case 'FATIA':
+                return 'UN'
+            case 'TABLETE':
+                return 'UN'
+            case 'DISPLAY':
                 return 'UN'
             case 'GARRAFA':
                 return 'UN'
@@ -104,6 +112,10 @@ class Correcao():
                 return 'V'
             case 'WATT':
                 return 'W'
+            case 'KIT':
+                return 'KIT'
+            case _:
+                return False
 
     def identificar_kit(unidade):
         if unidade == 'KIT':

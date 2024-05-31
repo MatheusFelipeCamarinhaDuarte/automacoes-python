@@ -51,14 +51,16 @@ class Banco_de_dados():
         self.conexao.commit()
         self.cursor.close()
         self.conexao.close()
+        self.cursor = None
+        self.conexao = None
 
-    def id(self,substituir):
+    def id(self,substituir, tabela):
         id = 1
         if substituir:
-            self.cursor.execute("DELETE FROM produto")
+            self.cursor.execute(f"DELETE FROM {tabela}")
         else:
-            self.cursor.execute("SELECT * FROM produto")
-            result1 = self.fetchall()
+            self.cursor.execute(f"SELECT * FROM {tabela}")
+            result1 = self.cursor.fetchall()
             maior_numero = 0
             for i in result1:
                 numero = int(i[0])
@@ -69,7 +71,8 @@ class Banco_de_dados():
 
     def cadastrar_produtos(self,matriz:list,janela_principal,substituir:bool=False):
         """Método para cadastrar produtos a partir de uma matriz igual a todos. O formato desta matriz é:
-            formato ideal:
+        
+        formato ideal:
             - 0 - codigo de barras (str - número)
             - 1 - descricao do produto (str)
             - 2 - grupo (grid)
@@ -85,16 +88,28 @@ class Banco_de_dados():
             - 12 - cst_cofins (int)
             - 13 - cst_pis_entrada (int)
             - 14 - cst_cofins_entrada (int)
+        
         Args:
             matriz (list): _description_
             janela_principal (_type_): _description_
             substituir (bool, optional): _description_. Defaults to False.
         """
         import tkinter as tk
+        from app.telas.tela_5_conectar_banco import conecatar_banco
         cursor = self.cursor
         conexao = self.conexao
         if conexao:
-            id = self.id(substituir)        
+            id = self.id(substituir, 'produto')        
+            
+            if not substituir:
+                cursor.execute("SELECT codigo_barra FROM produto")
+                result1 = cursor.fetchall()
+                maior_numero = 0
+                for i in result1:
+                    numero = int(i[0])
+                    if numero >= maior_numero:
+                        maior_numero = numero
+                id = maior_numero + 1
             
             # Inserção dos grupos e subgrupos, junto com a troca de seus nomes por grid
             matriz = self.troca_de_grupo(matriz)
@@ -122,50 +137,58 @@ class Banco_de_dados():
                 except:
                     tributacao = result[0][0]
                 
-                importar, errado, custo_medio, motivo_erro = self.verificacao_erro_produto(unid_venda,unid_compra,codigo_barra,nome,preco_venda,custo_medio)
+                importar, errado, preco_venda, custo_medio, unid_venda, unid_compra, motivo_erro = self.verificacao_erro_produto(unid_venda,unid_compra,codigo_barra,nome,preco_venda,custo_medio)
+
                 if importar:
                     try:
                         cursor.execute("INSERT INTO produto(codigo, codigo_barra, nome, grupo, subgrupo, preco_unit, preco_custo, unid_med, unid_med_entrada, qtde_unid_entrada, codigo_ncm, tributacao, cst_pis, cst_cofins, cst_pis_entrada, cst_cofins_entrada) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);", (id, codigo_barra, nome, grupo, subgrupo, preco_venda, custo_medio, unid_venda, unid_compra, fator_conversao, codigo_ncm, tributacao, cst_pis, cst_cofins, cst_pis_entrada, cst_cofins_entrada))
-                        # print(id, custo_medio)
                         id += 1
                     except Exception as e:
                         motivo_erro.append(e)
                         errado = True
                         importar = False
-                        break
                 if errado:
                     if importar:
-                        print('FDP '+nome)
+                        id_erro = id-1
                         importado = 'Importado com restrição'
                     else:
+                        id_erro = '###'
                         importado = 'Não importado'
                     # print(f"Produto {nome} ERRADO!")
-                    lista_erros.append([nome,codigo_barra,preco_venda,custo_medio,importado,motivo_erro])            
+                    lista_erros.append([id_erro,nome,codigo_barra,preco_venda,custo_medio,importado,motivo_erro])            
             conexao.commit()
                         
             # COMEÇO = Componetizar
+            cursor.execute("SELECT codigo FROM produto;")
+            resultado_produtos_totais = cursor.fetchall()
+            cursor.execute('SELECT nome FROM empresa WHERE codigo = 1')
+            resultado = cursor.fetchall()
+            nome_cliente = resultado[0][0]
+            self.finalizar()
+            conecatar_banco(janela_principal,self)
             if lista_erros != []:
-                from app.componentes.arquivo.relatorios import relatorio_erros_produto, baixar_arquivo_relatorio
+                from app.componentes.arquivo.relatorios import baixar_arquivo_relatorio
                 mensagem = tk.Toplevel()
                 xa = (mensagem.winfo_screenwidth() // 2) - (300 // 2)
                 ya = (mensagem.winfo_screenheight() // 2) - (300 // 2)
-                mensagem.geometry(f"{200}x{200}+{xa}+{ya}")            
+                mensagem.geometry(f"{300}x{200}+{xa}+{ya}")            
                 label = tk.Label(mensagem, text=f'Produtos totais: {contador_produtos_totais}')
                 label.pack()
-                cursor.execute("SELECT * FROM produto;")
-                result1 = cursor.fetchall()
-                label1 = tk.Label(mensagem, text=f'Produtos adicionados: {len(result1)}')
-                label1.pack()
-                label3 = tk.Label(mensagem, text=f'Produtos não adicionados: {contador_produtos_totais - len(result1)}')
+                if substituir:
+                    label1 = tk.Label(mensagem, text=f'Produtos adicionados: {len(resultado_produtos_totais)}')
+                    label1.pack()
+                    
+                else:
+                    label1 = tk.Label(mensagem, text=f'Produtos adicionados: {id-1}')
+                    label1.pack()
+                    label1 = tk.Label(mensagem, text=f'Produtos totais no banco: {len(resultado_produtos_totais)}')
+                    label1.pack()
+                label3 = tk.Label(mensagem, text=f'Produtos não adicionados: {contador_produtos_totais - id + 1}')
                 label3.pack()
-                label2 = tk.Label(mensagem, text=f'Produtos com erros: {len(lista_erros)}')
+                label2 = tk.Label(mensagem, text=f'Produtos com restrições: {len(lista_erros)}')
                 label2.pack()
-                nome_arquivo = relatorio_erros_produto(lista_erros)
-                cursor.execute('SELECT nome FROM empresa WHERE codigo = 1')
-                resultado = cursor.fetchall()
-                nome_cliente = resultado[0][0]
-                botao = tk.Button(mensagem, text='Baixar', command=lambda: baixar_arquivo_relatorio(nome_arquivo, mensagem, janela_principal,janela_principal,nome_cliente))
-                botao.pack()
+                botao = tk.Button(mensagem, text='Baixar relatório de importação', command=lambda: baixar_arquivo_relatorio(lista_erros, mensagem,janela_principal,nome_cliente), font=("Arial", 10))
+                botao.pack(pady=20)
                 # app/temp/relatorios/relatorio_erro_produto.csv
             # FIM = Componetizar
             else:
@@ -178,7 +201,7 @@ class Banco_de_dados():
                     pass
                 label2.pack()
                 # print("Todos os produtos foram adicionados com sucesso!!")
-            self.finalizar()
+            # self.finalizar()
 
     def troca_de_grupo(self, matriz:list[list]) -> list[list]:
         """Método para trocar o grupo pelo grid equivalente
@@ -226,7 +249,7 @@ class Banco_de_dados():
         grupo_com_grid = {} 
         subgrupo_com_grid = {}
         for grupo, subgrupos in dicionario.items():
-            self.cursor.execute("INSERT INTO grupo_produto (codigo,nome,flag) VALUES (%s,%s,%s);", (id,grupo,'A'))
+            self.cursor.execute("INSERT INTO grupo_produto (codigo,nome,flag,estoque_negativo_deposito) VALUES (%s,%s,%s,true);", (id,grupo,'A'))
             self.cursor.execute("SELECT * FROM grupo_produto WHERE codigo = %s;", (id,))
             result1 = self.cursor.fetchall()
             grid_grupo = result1[0][3]
@@ -244,6 +267,7 @@ class Banco_de_dados():
         resultado = self.cursor.fetchall()
         try:
             grid_depoisto = resultado[0][0]
+            self.cursor.execute("UPDATE deposito SET estoque_negativo = false WHERE codigo = 100;")
         except:
             self.cursor.execute("INSERT INTO deposito (codigo,nome,empresa,flag) VALUES (%s,%s,%s,%s);", ('100','DEPOSITO LOJA',1,'A'))
             self.cursor.execute("SELECT grid FROM deposito WHERE codigo = 100;")
@@ -256,7 +280,7 @@ class Banco_de_dados():
         self.conexao.commit()
         return grupo_com_grid, subgrupo_com_grid
 
-    def verificacao_erro_produto(self,unid_venda:str,unid_compra:str,codigo_barra:str,nome:str,preco_venda:str,custo_medio:str) -> Tuple[bool,bool,str,list]:
+    def verificacao_erro_produto(self,unid_venda:str,unid_compra:str,codigo_barra:str,nome:str,preco_venda:str,custo_medio:str) -> Tuple[bool,bool,str,str,list]:
         """Método de verificacao de erros antes das importações.
 
         Args:
@@ -281,17 +305,24 @@ class Banco_de_dados():
             importar = True
         if custo_medio =='' or custo_medio == '0' or custo_medio == '0.0' or custo_medio == '0.00' or custo_medio == None:
             custo_medio = '0.10'
-            motivo_erro.append('Falta preço custo - Adicionado o padrão (0.10)')
+            motivo_erro.append('Falta preço custo - Adicionado padrão (0.10)')
             errado = True
             importar = True
-        if correcao.identificar_kit(unid_venda):
-            motivo_erro.append('Kit não importado, favor, verificar cadastro.')
+        if preco_venda == '' or preco_venda == '0' or preco_venda == '0.0' or preco_venda == '0.00' or preco_venda == None:
+            motivo_erro.append('Falta de preço de venda - Adicionado padrão (0.10)')
+            preco_venda = '0.10'
             errado = True
-            importar = False
-        if correcao.identificar_kit(unid_compra):
-            motivo_erro.append('Kit não importado, favor, verificar cadastro.')
+            importar = True
+        if not unid_venda:
+            unid_venda = 'UN'
+            motivo_erro.append('Unidade de medida de venda não encontrada - Adicionado padrão (UN)')
             errado = True
-            importar = False
+            importar = True            
+        if not unid_compra:
+            unid_compra = 'UN'
+            motivo_erro.append('Unidade de medida de compra não encontrada - Adicionado padrão (UN)')
+            errado = True
+            importar = True
         if codigo_barra == '':
             motivo_erro.append('Falta de codigo de barras')
             errado = True
@@ -300,12 +331,13 @@ class Banco_de_dados():
             motivo_erro.append('Falta de nome')
             errado = True
             importar = False
-        if preco_venda == '' :
-            motivo_erro.append('Falta de preço de venda')
+        if correcao.identificar_kit(unid_venda) or correcao.identificar_kit(unid_compra):
+            motivo_erro = ['Kit não importado, favor, verificar cadastro.']
             errado = True
             importar = False
+
         
-        return importar, errado, custo_medio, motivo_erro
+        return importar, errado, preco_venda, custo_medio,unid_venda,unid_compra, motivo_erro
         
         
         

@@ -10,7 +10,7 @@ def relatorio_erros_produto(relatorio_erro):
     # Abre o arquivo em modo de escrita
     with open(nome_arquivo, mode="w", newline="") as arquivo_csv:
         escritor_csv = csv.writer(arquivo_csv, delimiter=';')
-        cabecalho = ['Nome', 'Código de barras', 'Preço de venda','Preço de custo','Foi importado?', 'Motivo de erro']
+        cabecalho = ['ID','Nome', 'Código de barras', 'Preço de venda','Preço de custo','Foi importado?', 'Restrição']
         escritor_csv.writerow(cabecalho)
         for linha in relatorio_erro:
             linha[-1] = ", ".join(linha[-1])
@@ -20,11 +20,12 @@ def relatorio_erros_produto(relatorio_erro):
     #     leitor_csv = csv.reader(arquivo_csv)
     #     matriz_lida = [linha for linha in leitor_csv]
     #     print(matriz_lida)
-def baixar_arquivo_relatorio(nome:str,tela,janela_principal,tela_atual,nome_cliente:str):
+def baixar_arquivo_relatorio(lista_erros:list,tela,janela_principal,nome_cliente:str):
+    nome_arquivo = relatorio_erros_produto(lista_erros)
     caminho_app = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    caminho_absoluto = os.path.join(caminho_app, 'temp','relatorios',nome+'.csv')
+    caminho_absoluto = os.path.join(caminho_app, 'temp','relatorios',nome_arquivo+'.csv')
     cliente = nome_cliente.replace(' ','_')
-    destino = filedialog.asksaveasfilename(defaultextension='csv', initialfile="relatorio_erro_"+cliente.lower(), filetypes=[("Arquivos CSV", "*.csv")])
+    destino = filedialog.asksaveasfilename(defaultextension='csv', initialfile="relatorio_restricoes_"+cliente.lower(), filetypes=[("Arquivos CSV", "*.csv")])
     print('Salvo em: '+destino)
     if destino:
         try:
@@ -32,9 +33,9 @@ def baixar_arquivo_relatorio(nome:str,tela,janela_principal,tela_atual,nome_clie
             os.system("copy \"" + caminho_absoluto + "\" \"" + destino + "\"")
         
             # print("Arquivo baixado com sucesso em:", destino)
-            messagebox.showinfo("Sucesso", "Download concluído com sucesso!")
-            tela.destroy()
             os.remove(caminho_absoluto)
+            tela.destroy()
+            messagebox.showinfo("Sucesso", "Download concluído com sucesso!")
             resposta = messagebox.askyesno('Teste',"Deseja voltar ao menu?")
             if resposta:
                 from app.telas.tela_2_escolha_tipo import escolha_tipo

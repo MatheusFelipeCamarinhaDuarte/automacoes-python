@@ -20,7 +20,7 @@ class Janela(tk.Tk):
         self.title("Matheus Solutions")
         # Icone
         diretorio_app = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        caminho_icone = os.path.join(diretorio_app, "icons", "ms3.ico")
+        caminho_icone = os.path.join(diretorio_app, "icons", "selltech.ico")
         self.iconbitmap(caminho_icone)
         # Travando as dimensões da janela
         self.resizable(False, False)

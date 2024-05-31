@@ -10,6 +10,7 @@ def conecatar_banco(janela_principal:Janela, banco:Banco_de_dados = Banco_de_dad
     """
     import tkinter as tk
     from app.telas.tela_4_escolha_formato import escolha_formato
+    from tkinter import messagebox
     janela_principal.limpar()
     # Criação da tela
     frame_superior, frame_inferior = janela_principal.duplo_frame(janela_principal)
@@ -25,4 +26,4 @@ def conecatar_banco(janela_principal:Janela, banco:Banco_de_dados = Banco_de_dad
     adicionar.config(state=tk.DISABLED)
     if banco.cursor:
         substituir.config(state=tk.NORMAL,command=lambda:[banco.cadastrar_produtos(matriz, janela_principal, substituir=True)])
-        adicionar.config(state=tk.NORMAL,command=lambda:[banco.cadastrar_produtos(matriz, janela_principal)])
+        adicionar.config(state=tk.NORMAL,command=lambda:[messagebox.showerror('Error','Módulo ainda não implantado!')])
